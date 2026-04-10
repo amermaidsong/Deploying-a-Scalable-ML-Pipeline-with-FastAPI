@@ -77,7 +77,14 @@ for col in cat_features:
         count = test[test[col] == slicevalue].shape[0]
  # Shortening names to satisfy the 88-char line limit
         p, r, f = performance_on_categorical_slice(
-            test, col, slicevalue, cat_features, "salary", encoder, lb, model
+            test,
+            col,
+            slicevalue,
+            cat_features,
+            "salary",
+            encoder,
+            lb,
+            model
         )
         with open("slice_output.txt", "a") as f:
             f.write(f"{col}: {slicevalue}, Count: {count}\n")
