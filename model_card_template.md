@@ -20,13 +20,7 @@ The evaluation was conducted on a held-out test set comprising 20% of the origin
 
 ## Metrics
 
-The model performance was evaluated using three primary metrics: Precision, Recall, and the F1 Score. Based on the most recent training run, the model achieved the following performance on the test set:
-
-Precision: 0.7419
-
-Recall: 0.6384
-
-F1 Score: 0.6863
+The model was evaluated using Precision, Recall, and the F1 Score. On the global test set, the model achieved a Precision of 0.7419, a Recall of 0.6384, and an F1 Score of 0.6863. Performance was also measured across data slices, revealing that the model performs best on the "United-States" demographic (F1: 0.6814) and significantly better on individuals with advanced degrees, such as Doctorates (F1: 0.8793), compared to those with lower education levels like 10th grade (F1: 0.2353).
 
 ## Ethical Considerations
 
@@ -34,4 +28,4 @@ The dataset used for this model contains sensitive demographic attributes, inclu
 
 ## Caveats and Recommendations
 
-The primary caveat is that this model is based on 1994 Census data, which does not reflect current economic conditions, inflation, or modern job markets. It is recommended that this model be used primarily as a baseline or for educational purposes. For a production-level tool, more modern datasets and extensive hyperparameter tuning would be necessary to improve the recall and fairness across all demographic groups.
+A significant caveat is the model's reliance on 1994 Census data, which does not reflect modern economic realities or current income distributions. Additionally, the model shows a "Recall gap," meaning it is better at identifying people who make <=50K than those who make >50K. It is recommended that this model be used only as an educational baseline. For future iterations, I recommend performing hyperparameter tuning specifically to improve the Recall for underrepresented demographic slices and incorporating more recent socio-economic data.
