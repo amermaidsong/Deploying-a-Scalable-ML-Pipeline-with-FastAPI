@@ -1,10 +1,15 @@
+import os
 import pandas as pd
+from fastapi import FastAPI
 from pydantic import BaseModel, Field
+from ml.data import process_data
+from ml.model import load_model, inference
 
-from ml.data import apply_label, process_data
-from ml.model import load_model
+# Initialize FastAPI app
+app = FastAPI()
 
-# DO NOT MODIFY
+# Get the project path for loading artifacts
+project_path = os.path.dirname(__file__)
 
 
 class Data(BaseModel):
@@ -28,41 +33,45 @@ class Data(BaseModel):
                                 alias="native-country")
 
 
-path = None  # TODO: enter the path for the saved encoder
-encoder = load_model(path)
-
-path = None  # TODO: enter the path for the saved model
-model = load_model(path)
-
-# TODO: create a RESTful API using FastAPI
-app = None  # your code here
-
-# TODO: create a GET on the root giving a welcome message
+# Load model artifacts
+encoder = load_model(os.path.join(project_path, "model", "encoder.pkl"))
+model = load_model(os.path.join(project_path, "model", "model.pkl"))
+lb = load_model(os.path.join(project_path, "model", "lb.pkl"))
 
 
 @app.get("/")
 async def get_root():
-    """ Say hello!"""
-    # your code here
-    pass
+    """Say hello!"""
+    return {"message": "Welcome to the Census Income Prediction API!"}
 
 
-# TODO: create a POST on a different path that does model inference
 @app.post("/data/")
 async def post_inference(data: Data):
-    # DO NOT MODIFY: turn the Pydantic model into a dict.
+    # Convert the Pydantic model into a dict.
     data_dict = data.dict()
-    # DO NOT MODIFY: clean up the dict to turn it into a Pandas DataFrame.
-    # The data has names with hyphens and Python does not allow those as variable names.
-    # Here it uses the functionality of FastAPI/Pydantic/etc to deal with this.
-    data = {k.replace("_", "-"): [v] for k, v in data_dict.items()}
-    data = pd.DataFrame.from_dict(data)
 
+    # Clean up the dict to turn it into a Pandas DataFrame with proper hyphens
+    data_raw = {k.replace("_", "-"): [v] for k, v in data_dict.items()}
+    df = pd.DataFrame.from_dict(data_raw)
+
+    cat_features = [
+        "workclass", "education", "marital-status", "occupation",
+        "relationship", "race", "sex", "native-country"
+    ]
+
+    # Process the data for inference
     data_processed, _, _, _ = process_data(
-        # your code here
-        # use data as data input
-        # use training = False
-        # do not need to pass lb as input
+        df,
+        categorical_features=cat_features,
+        training=False,
+        encoder=encoder,
+        lb=lb
     )
-    _inference = None  # your code here to predict the result using data_processed
-    return {"result": apply_label(_inference)}
+
+    # Run prediction
+    _inference = inference(model, data_processed)
+
+    # Convert prediction back to label (e.g., <=50K or >50K)
+    prediction_label = lb.inverse_transform(_inference)[0]
+
+    return {"result": str(prediction_label)}
