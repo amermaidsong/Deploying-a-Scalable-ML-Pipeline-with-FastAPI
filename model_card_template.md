@@ -30,7 +30,7 @@ F1 Score: 0.6863
 
 ## Ethical Considerations
 
-The dataset contains sensitive demographic information, including race, gender, and country of origin. Because the model is trained on historical data, there is a risk that it may reflect and amplify societal biases present at the time the data was collected. Users should exercise caution when interpreting results for specific demographic "slices," as performance variations may indicate underlying bias.
+The dataset used for this model contains sensitive demographic attributes, including race and sex. An analysis of model performance across these categories reveals significant disparities in predictive accuracy. For instance, the model achieves a higher F1 score of 0.6997 for individuals identified as Male, compared to an F1 score of 0.6015 for individuals identified as Female. Additionally, performance varies across racial groups, with the Black demographic group showing an F1 score of 0.6667, while the White demographic group shows 0.6850. These discrepancies suggest that the model may carry historical biases present in the 1994 Census data. Users should be aware that relying on this model for decision-making could reinforce existing socioeconomic inequalities, and it should be used with caution when applied to underrepresented groups.
 
 ## Caveats and Recommendations
 
