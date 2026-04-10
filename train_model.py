@@ -75,15 +75,9 @@ if os.path.exists("slice_output.txt"):
 for col in cat_features:
     for slicevalue in sorted(test[col].unique()):
         count = test[test[col] == slicevalue].shape[0]
-        p, r, fb = performance_on_categorical_slice(
-            test,
-            col,
-            slicevalue,
-            cat_features,
-            "salary",
-            encoder,
-            lb,
-            model
+ # Shortening names to satisfy the 88-char line limit
+        p, r, f = performance_on_categorical_slice(
+            test, col, slicevalue, cat_features, "salary", encoder, lb, model
         )
         with open("slice_output.txt", "a") as f:
             f.write(f"{col}: {slicevalue}, Count: {count}\n")
