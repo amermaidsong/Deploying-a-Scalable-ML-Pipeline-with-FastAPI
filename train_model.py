@@ -75,7 +75,6 @@ if os.path.exists("slice_output.txt"):
 for col in cat_features:
     for slicevalue in sorted(test[col].unique()):
         count = test[test[col] == slicevalue].shape[0]
- # Shortening names to satisfy the 88-char line limit
         p, r, f = performance_on_categorical_slice(
             test,
             col,
