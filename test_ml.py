@@ -13,7 +13,6 @@ def test_train_model():
     model = train_model(X, y)
 
     assert isinstance(model, RandomForestClassifier)
-   
     assert hasattr(model, "estimators_")
 
 
